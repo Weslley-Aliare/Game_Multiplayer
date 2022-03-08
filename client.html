@@ -22,30 +22,93 @@
     <script>
         const screen = document.getElementById('screen')
         const context = screen.getContext('2d')
+        const currentPlayerId = 'player1'
 
-        const game =  {
-            players: {
-                'player1': {x: 1, y: 1},
-                'player2': {x: 9, y: 9}
-            },
-            fruits: {
-                'fruit1': {x:3, y:1}
+        function createGame() {
+            const state = {
+                players: {},
+                fruits: {}
+            }
+
+        function addPlayer(command) {
+            const playerId = command.playerId
+            const playerx = command.playerx
+
+            state.players[playerId] = {
+                x: playerx,
+                y: playery
             }
         }
+
+        function removePlayer(command) {
+            const playerId = command.playerId
+            delete state.players[playerId]
+        }
+
+        function movePlayer(command) {
+            console.log(`game.movePlayer() -> Moving ${command.playerId} with ${command.keyPressed}`)
+
+        const acceptedMoves = {
+            ArrowUp(player) {
+                 console.log('game.movPlayer().ArrowUp() -> Moving player Up')
+                if (player.y -1 >= 0) {
+                     PLAYER.Y = PLAYER.Y - 1
+                 }
+            },
+            ArrowRight(player) {
+                console.log('Moving player Right')
+                if (player.x + 1 < screen.width) {
+                    player.x = player.x + 1
+                }
+            },
+            ArrowDown(player) {
+                console.log('Moving player Down') 
+                if (player.y + 1 < screen.height) {
+                    player.y = player.y + 1
+                }
+            },
+             ArrowLeft(player) {
+                console.log('Moving player Left')
+                 if (player.x - 1 <screen.left) {
+                    player.x = player.x - 1
+                }
+            }
+        }    
+
+        const keyPressed = command.keyPressed
+        const player = state.players [commad.playerId]
+        const moveFunction = acceptedMoves [keyPressed]
+
+        if (player && moveFunction) {
+            moveFunctrion(player)
+        }
+    }
+
+        return {
+            addPlayer,
+            removePlayer,
+            movePlayer,
+            state
+        }
+    }
+
+    
+
+
 
         renderScreen()
 
         function renderScreen() {
             context.fillStyle = 'white'
-            context.fillRect(0, 0, 10, 10)
+            context.clearRect(0, 0, 10, 10)
 
-            for (playerId in game.players) {
+            for (const playerId in game.players) {
                 const player = game.players[playerId]
                 context.fillStyle = 'black'
                 context.fillRect(player.x, player.y, 1, 1)
             }
 
-            for (fruitId in game.fruits) {
+            for (const fruitId in game.fruits) {
                 const fruit = game.fruits[fruitId]
                 context.fillStyle = 'green'
                 context.fillRect(fruit.x, fruit.y, 1, 1)
@@ -53,7 +116,8 @@
 
             requestAnimationFrame(renderScreen)
         }
-    </script>
+
+</script>
     
 </body>
 </html>
